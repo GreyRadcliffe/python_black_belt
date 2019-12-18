@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Travel Dashboard</title>
+</head>
+<body>
+    <a href="/logout">Logout</a>
+    <h1>Hello {{logged_user.name}}!</h1>
+    <p>Your trip schedules</p>
+    <table class="">
+        <tr>
+            <th>Destination</th>
+            <th>Travel Start Date</th>
+            <th>Travel End Date</th>
+            <th>Plan</th>
+        </tr>
+        {% for trip in all_trips %}
+        {% if logged_user in trip.users.all or logged_user == trip.creator %}
+        <tr>
+            <td><a href="destination/{{trip.id}}/">{{ trip.destination }}</a></td>
+            <td>{{ trip.travel_from }}</td>
+            <td>{{ trip.travel_to }}</td>
+            <td>{{ trip.description }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </table>
+    <a href="add/">Add a Travel Plan</a>
+    <p>Other User's Travel Plans</p>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Destination</th>
+            <th>Travel Start Date</th>
+            <th>Travel End Date</th>
+            <th>Do You Want To Join?</th>
+        </tr>
+        {% for user in other_users.all %}
+        {% for trip in user.trips.all %}
+            {% if logged_user not in trip.users.all %}
+            <tr>
+                <td>{{ user.name }}</td>
+                <td><a href="destination/{{trip.id}}/">{{ trip.destination }}</a></td>
+                <td>{{ trip.travel_from }}</td>
+                <td>{{ trip.travel_to }}</td>
+                <td><a href="join/{{trip.id}}/">Join</a></td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+        {% endfor %}
+    </table>
+</body>
+</html>
